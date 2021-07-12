@@ -14,3 +14,13 @@ class Member(db.Model):
 
     def __repr__(self) -> str:
         return "<Member %r>" % self.name
+
+    @property
+    def serialize(self):
+        return {
+            'id':self.id,
+            'name':self.name,
+            'email':self.email,
+            'profileImageUrl':self.profileImageUrl,
+            'gender':self.gender
+        }
