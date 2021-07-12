@@ -1,7 +1,9 @@
-from flask import request
+from flask import request, json
 from config import app
-from models import Member
-from repository import saveMember, getMemberById, deleteMemberById
+from models import Member, Team
+from repository import saveMember, getMemberById, deleteMemberById, saveTeam
+from domain import MemberDomain
+from datetime import datetime
 
 @app.route("/members",methods=["POST"])
 def member():
@@ -31,6 +33,24 @@ def member_detail(id):
 
         return {"success":"Member was deleted"},202
 
+@app.route("/team",methods=["POST"])
+def team():
+    # receive the request
+    request_data = request.json 
+
+    member_list = []
+
+    for member in request_data["members"]:
+
+        memberDomain = MemberDomain(member["email"], member["role"])
+
+        member_list.append(memberDomain.serialize)
+
+    team = Team(name=request_data["name"],members=member_list)
+
+    saveTeam(team)
+
+    return team.serialize
 
 
 if(__name__== "__main__"):

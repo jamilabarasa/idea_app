@@ -1,7 +1,6 @@
-from enum import unique
 from config import app
 from flask_sqlalchemy import SQLAlchemy
-import enum
+from datetime import datetime
 
 db = SQLAlchemy(app)
 
@@ -23,4 +22,23 @@ class Member(db.Model):
             'email':self.email,
             'profileImageUrl':self.profileImageUrl,
             'gender':self.gender
+        }
+
+
+class Team(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    creation_date = db.Column(db.DateTime,nullable=False,default=datetime.now())
+    members = db.Column(db.PickleType,nullable=False)
+
+    def __repr__(self) -> str:
+        return "<Team %r>" % self.name
+
+    @property
+    def serialize(self):
+        return{
+            'id':self.id,
+            'name':self.name,
+            'creation_date':self.creation_date,
+            'members':self.members
         }
