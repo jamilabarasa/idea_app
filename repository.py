@@ -1,4 +1,4 @@
-from models import db, Member
+from models import db, Member, Team
 
 def saveMember(member:Member):
     
@@ -17,5 +17,18 @@ def deleteMemberById(id:int):
     member:Member = getMemberById(id)
 
     db.session.delete(member)
+
+    db.session.commit()
+
+
+def findMemberByEmail(email:str):
+
+    member = Member.query.filter_by(email=email).first()
+
+    return member
+
+def saveTeam(team:Team):
+
+    db.session.add(team)
 
     db.session.commit()
