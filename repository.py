@@ -12,6 +12,12 @@ def getMemberById(id:int):
 
     return member
 
+def getMembers():
+
+    members = Member.query.all()
+
+    return members
+
 def deleteMemberById(id:int):
 
     member:Member = getMemberById(id)
