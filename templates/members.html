@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Members{% endblock %}
+
+{%block content%}
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Gender</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in members %}
+            <tr>
+                <td>{{member.id}}</td>
+                <td>{{member.name}}</td>
+                <td>{{member.email}}</td>
+                <td>{{member.gender}}</td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i> DELETE</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{%endblock%}
