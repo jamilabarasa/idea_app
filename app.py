@@ -51,7 +51,6 @@ def no_cache(view):
     return functools.update_wrapper(no_cache_impl, view)
 
 
-
 @app.route("/",methods=["GET","POST"])
 def login():
     if request.method == "GET":
@@ -60,8 +59,6 @@ def login():
         oauth_session = OAuth2Session(CLIENT_ID, CLIENT_SECRET, scope = AUTHORIZATION_SCOPE, redirect_uri= AUTH_REDIRECT_URI )
 
         uri, state = oauth_session.authorization_url(AUTHORIZATION_URL)
-
-        print(uri)
 
         session[AUTH_STATE_KEY] = state
 
@@ -105,7 +102,9 @@ def google_auth_redirect():
 @app.route('/logout')
 @no_cache
 def logout():
+
     session.pop(AUTH_TOKEN_KEY, None)
+
     session.pop(AUTH_STATE_KEY, None)
 
     flash("Logged out","info")
