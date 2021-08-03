@@ -1,9 +1,15 @@
-from flask import request, json
+
+from flask import request, json,redirect, render_template
+from flask.wrappers import Request
 from config import app
-from models import Member, Team
-from repository import saveMember, getMemberById, deleteMemberById, saveTeam
+from models import Member, Team, db, Family
+from repository import getAllTeams, saveMember, getMemberById, deleteMemberById, getAllTeams,deleteTeamByName,getAllFamily
 from domain import MemberDomain
 from datetime import datetime
+from wtforms import Form, BooleanField, TextField, PasswordField, validators
+from flask.helpers import flash, url_for
+
+
 
 @app.route("/members",methods=["POST"])
 def member():
@@ -33,25 +39,84 @@ def member_detail(id):
 
         return {"success":"Member was deleted"},202
 
-@app.route("/team",methods=["POST"])
+
+@app.route("/team/create",methods=["POST","GET"])
 def team():
-    # receive the request
-    request_data = request.json 
+    if request.method == "POST":
 
-    member_list = []
+        team_data= Team(name = request.form["name"])
 
-    for member in request_data["members"]:
+        db.session.add(team_data)
 
-        memberDomain = MemberDomain(member["email"], member["role"])
+        db.session.commit()
 
-        member_list.append(memberDomain.serialize)
+        # get all teams
+        teams = getAllTeams()
 
-    team = Team(name=request_data["name"],members=member_list)
+        # saveTeam(team)
 
-    saveTeam(team)
+        flash(team_data.serialize["name"] + " was successfully created","info") 
 
-    return team.serialize
+        return render_template('teamList.html',teams=teams)
+        
+        
 
+    elif request.method == "GET":
 
+        return render_template('team.html')
+
+@app.route("/team/list/<name>/delete",methods=["GET","POST"])
+def listTeam(name):
+
+    team = Team.query.filter_by(name=name).first()
+
+    if request.method == "GET":
+
+        teams = getAllTeams()
+
+        return render_template('teamList.html',teams=teams)
+
+    elif request.method == "POST":
+
+        db.session.delete(team)
+
+        db.session.commit()
+
+         # get all teams
+        teams = getAllTeams()
+
+        flash("team was successfully deleted","danger") 
+
+        return render_template('teamList.html',teams=teams)
+
+@app.route("/team/list/<name>/update",methods=["POST","GET"])
+def updateTeam(name):
+
+    team = Team.query.filter_by(name=name).first()
+
+    if request.method == "POST":
+
+        db.session.delete(team)
+
+        db.session.commit()
+
+        team_data= Team(name = request.form["name"])
+
+        db.session.add(team_data)
+
+        db.session.commit()
+
+        teams = getAllTeams()
+
+        flash("team was successfully updated","info") 
+
+        return render_template('teamList.html',teams=teams)    
+
+    elif request.method == "GET":
+
+        return render_template('editTeam.html')
+        
+
+        
 if(__name__== "__main__"):
     app.run(debug=True)

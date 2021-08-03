@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{%block title%}Teams{%endblock%}
+
+
+{%block content%}
+
+<div class="content ">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Creation Date</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>   
+            <!-- loop goes here -->
+            {%for team  in teams|sort(attribute='id',reverse=True)%}
+            <tr>
+                <td>{{team.name}}</td>
+
+
+                <td>{{team.creation_date.strftime("%d-%m-%Y")}}</td>
+                <td>
+                    
+                    
+                    <a href="/team/list/{{ team.name}}/update" >
+                        <button class="btn btn-secondary btn-sm"><i class="bi bi-pencil-fill"></i>UPDATE</button>
+                      </a>
+
+                    <form class="hidden" method="post" action="/team/list/{{ team.name }}/delete">
+                        <button class="btn btn-danger btn-sm"><i class="bi bi-trash-fill"></i>DELETE</button>
+                      </form>
+                    
+                     
+                </td>
+            </tr>
+            <!-- end of loop -->
+            {%endfor%}
+        </tbody>
+    </table>
+
+
+
+</div>
+
+{%endblock%}

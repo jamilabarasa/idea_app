@@ -1,4 +1,4 @@
-from models import db, Member, Team
+from models import db, Member, Team ,Family
 
 def saveMember(member:Member):
     
@@ -32,3 +32,27 @@ def saveTeam(team:Team):
     db.session.add(team)
 
     db.session.commit()
+
+def getAllTeams():
+
+     teams = Team.query.all()
+
+     return teams
+
+def deleteTeamByName(name:str):
+
+    team = Team.query.filter_by(name=name).first()
+
+    db.session.delete(team)
+
+    db.session.commit()
+    
+def getAllFamily():
+
+    family = Family.query.all()
+
+    return family
+
+     
+
+
